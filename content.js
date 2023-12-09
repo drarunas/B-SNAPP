@@ -54,10 +54,10 @@ $(document).ready(function() {
     var row = $('<tr>').appendTo(tableBody);
     $('<td>').text(author).appendTo(row);
     $('<td>').text(journal).appendTo(row);
-    $('<td>').text(id).appendTo(row);
+    $('<td>').text(id).addClass('c-submissions-list__item--id').appendTo(row);
     $('<td>').append($('<a>').attr('href', titleURL).text(title)).appendTo(row);
     $('<td>').text(version).appendTo(row);
-    $('<td>').append($('<textarea>').val(comment).on('input', function() {
+    $('<td>').append($('<textarea>').val(comment).attr('readonly', true).on('input', function() {
       localStorage.setItem('comment_' + id, $(this).val());
     })).appendTo(row);
       
@@ -106,7 +106,50 @@ $(document).ready(function() {
       autoWidth: false // Disable automatic column width calculation
   });
 
-    
+ let activeTextarea; // Track active textarea
+  function createTextModal(initialText, id, textarea) {
+    // Create modal elements
+    activeTextarea = textarea;
+    const modalDiv = $('<div>').addClass('modal');
+    const modalContent = $('<div>').addClass('modal-content');
+    const closeButton = $('<span>').addClass('close').html('&times;');
+    const modalTextarea = $('<textarea>').attr('id', 'modalTextarea').val(initialText);
+
+    // Append elements to modal content
+    modalContent.append(closeButton, modalTextarea);
+    modalDiv.append(modalContent);
+
+    // Append modal to body
+    $('body').append(modalDiv);
+
+    // Show modal
+
+      modalDiv.css({
+    'display': 'block',
+    'left': '50%',
+    'top': '50%',
+    'transform': 'translate(-50%, -50%)'
+  });
+
+
+
+    // Close the modal when the close button is clicked
+    closeButton.on('click', function() {
+    if (activeTextarea) {
+        activeTextarea.val(modalTextarea.val());
+        modalDiv.css('display', 'none');
+        localStorage.setItem('comment_' + id, modalTextarea.val());
+      }
+      modalDiv.css('display', 'none');
+    });
+  }
+
+  // Attach click event listener to each textarea for opening modal
+  $('#myTable').on('click', 'textarea', function() {
+    const textContent = $(this).val();
+    const id = $(this).closest('tr').find('.c-submissions-list__item--id').text().trim();
+    createTextModal(textContent, id, $(this));
+  });
     
 
     
