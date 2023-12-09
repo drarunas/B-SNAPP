@@ -1,0 +1,34 @@
+{
+    "manifest_version": 3,
+    "name": "B-SNAPP",
+    "version": "1.0",
+    "action": {
+        "default_popup": "popup.html"
+    },
+
+    "description": "SNAPP improvements for editorial workflows",
+    "content_scripts": [
+        {
+            "matches": [
+                "*://editorial.nature.com/*"
+            ],
+            "js": [
+                "jquery.js",
+                "jquery.dataTables.js",
+                "content.js"
+ 
+            ],
+            "css": [
+                "custom.css",
+                "dataTables.css"
+            ]
+        }
+    ],
+    "permissions": [
+        "tabs",
+        "storage"
+    ],
+    "background": {
+        "service_worker":  "background.js"
+    }
+}
