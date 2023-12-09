@@ -16,15 +16,18 @@
     font-size: 14px;
 }
 
-select {
+.dataTable select {
     width: 100%;
     height: 25px;
     padding: 3px;
     margin: 2px;
     font-size: 110%;
+    border-radius: 3px;
 }
 
-
+.modal h3 {
+    padding: 5px;
+}
 /* CSS for Modal */
 .modal {
   display: none;

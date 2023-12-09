@@ -25,6 +25,9 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
 });
 
 
+                
+                
+                
 $(document).ready(function() {
 
     
@@ -93,6 +96,7 @@ $(document).ready(function() {
 
   // Initialize DataTable with options
   $("#myTable").DataTable({
+      
       pageLength: 100,
       stateSave: true,
       columnDefs: [
@@ -156,6 +160,80 @@ $(document).ready(function() {
     createTextModal(textContent, id, title, $(this));
   });
     
+// Create a button and append it above the table
+var downloadButton = $('<button>').text('Export').addClass('btn').attr('id', 'downloadTxt');
+$('#myTable_wrapper').after(downloadButton);
+
+function downloadTxtFile() {
+  var tableData = [];
+
+  // Get table headers
+  var headers = [];
+  $('#myTable th').each(function() {
+    headers.push($(this).text());
+  });
+
+  // Get table rows
+  $('#myTable tbody tr').each(function() {
+    var rowData = [];
+
+    // Loop through each cell in the row
+    $(this).find('td').each(function(index) {
+      var cellValue = '';
+
+      // If the cell contains a textarea, get its value; otherwise, get cell text
+      if ($(this).find('textarea').length > 0) {
+        cellValue = $(this).find('textarea').val();
+      } else {
+        cellValue = $(this).text().trim();
+      }
+
+      // Add header and value to the row data
+      rowData.push(headers[index]); // Header
+      rowData.push(cellValue); // Value
+    });
+
+    // Push row data to the tableData array
+    tableData.push(rowData);
+  });
+
+  // Create a blob with the data
+  var blob = new Blob([convertToFormattedText(tableData)], { type: 'text/plain' });
+
+  // Create a link element and trigger the download
+  var link = document.createElement('a');
+  link.href = window.URL.createObjectURL(blob);
+  link.download = 'table_data.txt';
+  link.click();
+}
+
+// Function to convert table data to formatted text
+function convertToFormattedText(data) {
+  var formattedText = '';
+
+  // Loop through each row
+  data.forEach(function(row) {
+    row.forEach(function(cell, index) {
+      formattedText += cell;
+
+      // Add tab after headers, except for the last item in the row
+      if (index % 2 === 0) {
+        formattedText += '\n';
+      } else {
+        formattedText += '\n';
+      }
+    });
+      formattedText += '\n';
+      formattedText += '\n';
+  });
+
+  return formattedText;
+}
+
+// Attach the downloadTxtFile function to the button click event
+$('#downloadTxt').on('click', function() {
+  downloadTxtFile();
+});
 
     
 });
