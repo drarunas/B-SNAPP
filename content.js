@@ -55,7 +55,7 @@ $(document).ready(function() {
     $('<td>').text(author).appendTo(row);
     $('<td>').text(journal).appendTo(row);
     $('<td>').text(id).addClass('c-submissions-list__item--id').appendTo(row);
-    $('<td>').append($('<a>').attr('href', titleURL).text(title)).appendTo(row);
+    $('<td>').append($('<a>').attr('href', titleURL).text(title)).addClass('c-title').appendTo(row);
     $('<td>').text(version).appendTo(row);
     $('<td>').append($('<textarea>').val(comment).attr('readonly', true).on('input', function() {
       localStorage.setItem('comment_' + id, $(this).val());
@@ -106,17 +106,21 @@ $(document).ready(function() {
       autoWidth: false // Disable automatic column width calculation
   });
 
- let activeTextarea; // Track active textarea
-  function createTextModal(initialText, id, textarea) {
+  let activeTextarea; // Track active textarea
+  function createTextModal(initialText, id, title, textarea) {
     // Create modal elements
     activeTextarea = textarea;
+
     const modalDiv = $('<div>').addClass('modal');
     const modalContent = $('<div>').addClass('modal-content');
     const closeButton = $('<span>').addClass('close').html('&times;');
+    const modalHeader = $('<h3>').text('Paper ID: ' + id); // Adding header with Paper ID
+    const modalTitle = $('<h3>').text(title); // Adding header with Paper ID
     const modalTextarea = $('<textarea>').attr('id', 'modalTextarea').val(initialText);
-
+    const headerContainer = $('<div>').append(modalHeader).append(modalTitle); // Create a container for header
+    
     // Append elements to modal content
-    modalContent.append(closeButton, modalTextarea);
+    modalContent.append(closeButton, headerContainer, modalTextarea);
     modalDiv.append(modalContent);
 
     // Append modal to body
@@ -148,7 +152,8 @@ $(document).ready(function() {
   $('#myTable').on('click', 'textarea', function() {
     const textContent = $(this).val();
     const id = $(this).closest('tr').find('.c-submissions-list__item--id').text().trim();
-    createTextModal(textContent, id, $(this));
+    const title = $(this).closest('tr').find('.c-title').text().trim();
+    createTextModal(textContent, id, title, $(this));
   });
     
 
