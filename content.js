@@ -203,18 +203,41 @@ function downloadTxtFile() {
   // Create a link element and trigger the download
   var link = document.createElement('a');
   link.href = window.URL.createObjectURL(blob);
-  link.download = 'table_data.txt';
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+  var yyyy = today.getFullYear();
+
+  today = mm + '-' + dd + '-' + yyyy;
+
+  link.href = window.URL.createObjectURL(blob);
+  link.download = 'B-SNAPP-export-' + today + '.txt'; 
   link.click();
 }
 
 // Function to convert table data to formatted text
 function convertToFormattedText(data) {
   var formattedText = '';
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+  var yyyy = today.getFullYear();
 
+  today = mm + '/' + dd + '/' + yyyy;
+
+  // Add date to the beginning of the text
+  formattedText += 'Export Date: ' + today + '\n\n';
   // Loop through each row
   data.forEach(function(row) {
     row.forEach(function(cell, index) {
-      formattedText += cell;
+        
+      if (index % 2 === 0) {
+        formattedText += '**** ';
+        formattedText += cell;  
+        formattedText += ' ****';
+      } else {
+        formattedText += cell;
+      }
 
       // Add tab after headers, except for the last item in the row
       if (index % 2 === 0) {
@@ -223,6 +246,7 @@ function convertToFormattedText(data) {
         formattedText += '\n';
       }
     });
+      formattedText += '********************************************************';
       formattedText += '\n';
       formattedText += '\n';
   });
