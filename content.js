@@ -22,10 +22,7 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
     "dropdown-text-desc": function(a, b) {
         return b.localeCompare(a);
     }
-});
-
-
-                
+});       
                 
                 
 $(document).ready(function() {
@@ -261,3 +258,51 @@ $('#downloadTxt').on('click', function() {
 
     
 });
+
+// Reviewer finder in SNAPP improvements
+$(document).ready(function() {
+ // Function to check and highlight elements
+function highlightElements() {
+  const reviewItems = document.querySelectorAll('li.u-flexbox.u-justify-content-between.u-align-items-center.u-mt-2');
+
+  reviewItems.forEach(item => {
+    const metricText = item.querySelector('p.c-reviewer-metric--details--text').textContent.trim();
+    const metricNumber = parseInt(item.querySelector('p.c-reviewer-metric--details--stats').textContent.trim());
+
+    if (metricText === 'Invitations to review' && metricNumber > 5) {
+      item.style.backgroundColor = '#fab6b1';
+    }
+    if (metricText === 'Invitations to review' && metricNumber < 3) {
+      item.style.backgroundColor = '#a9dfa8';
+    }
+  });
+}
+
+// MutationObserver configuration
+const observerConfig = {
+  childList: true, // Watch for changes in the children of the observed node
+  subtree: true,   // Watch all descendants of the observed node
+};
+
+// Callback function for MutationObserver
+const mutationCallback = function(mutationsList) {
+  mutationsList.forEach(mutation => {
+    if (mutation.type === 'childList') {
+      // New nodes have been added, so let's check and highlight elements again
+      highlightElements();
+    }
+  });
+};
+
+// Create a MutationObserver instance
+const observer = new MutationObserver(mutationCallback);
+
+// Start observing changes in the body (or any specific node)
+observer.observe(document.body, observerConfig);
+
+// Initial highlighting check when the content script runs
+highlightElements();
+
+
+});
+                  

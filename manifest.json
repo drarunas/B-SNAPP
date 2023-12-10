@@ -10,7 +10,8 @@
     "content_scripts": [
         {
             "matches": [
-                "*://editorial.nature.com/*"
+                "*://editorial.nature.com/*",
+                "*://reviewer-finder.springernature.com/*"
             ],
             "js": [
                 "jquery.js",
