@@ -1,6 +1,5 @@
 
 
-
 // Find all <link> elements with href containing 'basic.css'
 var links = document.querySelectorAll('link[href*="basic.css"]');
 
@@ -28,7 +27,7 @@ jQuery.extend(jQuery.fn.dataTableExt.oSort, {
 $(document).ready(function() {
 
     
-  var myList = $('ul.clean-list');
+  var myList = $('ul.clean-list:not(.inactive-list)');
   var listItems = myList.find('li');
 
   var table = $('<table>').attr('id', 'myTable');
@@ -107,47 +106,70 @@ $(document).ready(function() {
       autoWidth: false // Disable automatic column width calculation
   });
 
+// Handle modal popup windows
+    
   let activeTextarea; // Track active textarea
   function createTextModal(initialText, id, title, textarea) {
     // Create modal elements
-    activeTextarea = textarea;
+    let activeTextarea = textarea;
 
     const modalDiv = $('<div>').addClass('modal');
     const modalContent = $('<div>').addClass('modal-content');
     const closeButton = $('<span>').addClass('close').html('&times;');
-    const modalHeader = $('<h3>').text('Paper ID: ' + id); // Adding header with Paper ID
-    const modalTitle = $('<h3>').text(title); // Adding header with Paper ID
-    const modalTextarea = $('<textarea>').attr('id', 'modalTextarea').val(initialText);
-    const headerContainer = $('<div>').append(modalHeader).append(modalTitle); // Create a container for header
-    
+    const dragHandle = $('<span>').addClass('draghandle').html('&#8212');
+    const modalHeaderTitle = $('<h3>').addClass('modal-header').text(id + ': ' + title); // Adding header with Paper ID and Title
+    const textareaDiv =  $('<div>').addClass('modal-text-div');
+    const modalTextarea = $('<textarea>').addClass('modalTextArea').attr('id', 'modalTextarea').val(initialText);
+    textareaDiv.append(modalTextarea);
+
     // Append elements to modal content
-    modalContent.append(closeButton, headerContainer, modalTextarea);
+    modalContent.append(dragHandle, closeButton, modalHeaderTitle, textareaDiv);
     modalDiv.append(modalContent);
 
     // Append modal to body
     $('body').append(modalDiv);
 
-    // Show modal
 
-      modalDiv.css({
-    'display': 'block',
-    'left': '50%',
-    'top': '50%',
-    'transform': 'translate(-50%, -50%)'
-  });
+ // Set initial positioning and show modal
+    const windowHeight = $(window).height();
+    const windowWidth = $(window).width();
+    const modalHeight = 300; // Initial modal height
+    const modalWidth = 500; // Initial modal width
 
+    modalDiv.css({
+        'display': 'block',
+        'position': 'fixed', // Add this to ensure correct positioning
+        'top': (windowHeight - modalHeight) / 2 + 'px',
+        'left': (windowWidth - modalWidth) / 2 + 'px',
+        'height': modalHeight + 'px',
+        'width': modalWidth + 'px'
+    }); 
 
-
+    // Make the modal draggable after it's displayed
+    modalDiv.draggable({
+        handle: ".draghandle"
+    });  
+      
+    modalDiv.resizable({
+        handles: "n, e, s, w, ne, se, sw, nw" // Display all handles for resizing
+    });
+      
+  
+      
     // Close the modal when the close button is clicked
     closeButton.on('click', function() {
-    if (activeTextarea) {
-        activeTextarea.val(modalTextarea.val());
+        if (activeTextarea) {
+            activeTextarea.val(modalTextarea.val());
+            modalDiv.css('display', 'none');
+            localStorage.setItem('comment_' + id, modalTextarea.val());
+        }
         modalDiv.css('display', 'none');
-        localStorage.setItem('comment_' + id, modalTextarea.val());
-      }
-      modalDiv.css('display', 'none');
     });
-  }
+      
+    
+
+}
+
 
   // Attach click event listener to each textarea for opening modal
   $('#myTable').on('click', 'textarea', function() {
@@ -258,6 +280,83 @@ $('#downloadTxt').on('click', function() {
 
     
 });
+
+
+
+// Notes box on the submission page:
+$(document).ready(function () {
+    if ($('body').hasClass('editorial-system-submission')) {
+        // Extract manuscript ID from span element
+        const manuscriptId = $('.c-address__sub-id').text().trim();
+        const notesDiv = $('<div>').addClass('c p-grid-container');
+        const notesDivc = $('<div>').addClass('c u-bg-color-light-grey p-grid-col-12');
+        // Create a div with class drop-box-content for the dropdown
+        const dropBoxContent = $('<div>').addClass('drop-box-content u-ml30').hide();
+
+        // Create a button for the dropdown trigger
+        const dropDownButton = $('<button class="notes-exp closed-c">Editorial Notes</button>');
+
+        // Create a div with class p-grid-container for the textarea and header
+        const gridContainer = $('<div>').addClass('p-grid-container-c');
+
+        
+        // Create a textarea and append it to the grid container
+        const textArea = $('<textarea>').attr({
+            id: 'manuscriptTextArea',
+            rows: '6', // Set number of rows as needed
+            cols: '50' // Set number of columns as needed
+        });
+        gridContainer.append(textArea);
+
+        // Append the grid container to the dropdown content
+        dropBoxContent.append(gridContainer);
+        
+        notesDivc.append(dropDownButton);
+        notesDivc.append(dropBoxContent);
+        
+        notesDiv.append(notesDivc);
+
+        // Add the drop-down button and content to the body
+
+        $('.p-grid-container').first().after(notesDiv);
+
+        // Toggle dropdown content when the button is clicked
+        dropDownButton.on('click', function() {
+            const isClosed = $(this).hasClass('closed-c');
+
+            // Toggle classes and aria-expanded attribute
+            if (isClosed) {
+                $(this).removeClass('closed-c').addClass('open-c');
+            } else {
+                $(this).removeClass('open-c').addClass('closed-c');
+            }
+
+            const dropBoxContent = $(this).next('.drop-box-content');
+            dropBoxContent.slideToggle(); // Toggle visibility of the dropdown content
+        });
+
+        // Get text from localStorage and populate the textarea
+        const storedText = localStorage.getItem('comment_' + manuscriptId);
+        if (storedText !== null) {
+            $('#manuscriptTextArea').val(storedText);
+        }
+
+        // Save changes to local storage when content changes
+        $('#manuscriptTextArea').on('input', function () {
+            const editedText = $(this).val();
+            localStorage.setItem('comment_' + manuscriptId, editedText);
+        });
+    }
+});
+
+
+
+
+
+
+
+
+
 
 // Reviewer finder in SNAPP improvements
 $(document).ready(function() {

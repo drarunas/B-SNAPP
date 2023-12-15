@@ -16,6 +16,24 @@
     font-size: 14px;
 }
 
+
+.submissionPageNotes {
+    width: 100%;
+    height: 100px;
+    resize: VERTICAL ;
+    padding: 5px 5px !important;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    background-color: #f8f8f8;
+    font-size: 14px;
+}
+
+
+.p-grid-container-c {
+    padding: 20px;
+}
+
 .dataTable select {
     width: 100%;
     height: 25px;
@@ -24,45 +42,139 @@
     font-size: 110%;
     border-radius: 3px;
 }
-
+.major-title-c {
+    font-size: 15pt;
+    color: white;
+}
 .modal h3 {
-    padding: 5px;
+    padding: 2px;
+    font-size: 10pt;
+
 }
 /* CSS for Modal */
 .modal {
   display: none;
   position: fixed;
   z-index: 1;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   width: 70%; /* Adjust width as needed */
   height: 60%;
   max-width: 701px; /* Set a maximum width */
-  background-color: #d3e4f9;
+  background-color: #eaf2ff;
   border-radius: 10px; /* Rounded corners */
   box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.37); /* Box shadow for depth */
-  padding: 30px;
+  padding: 29px;
   font-size: 23px; /* Adjust font size */
   line-height: 1.5; /* Adjust line height */
+  box-sizing: content-box;
 }
 
-.modal-content textarea {
-  height: 300px;
-}
+
 .modal-content {
-  position: relative;
-
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensures the modal content takes full height */
+  box-sizing: content-box;
 }
+
+.modal-text-div {
+    flex: 1;
+}
+
+
 
 .close {
   position: absolute;
-  top: -20px;
-  right: -20px;
+  top: 5px;
+  right: 5px;
   color: #aaa;
   font-size: 30px;
   font-weight: bold;
   cursor: pointer;
+  line-height: 1;
+}
+
+.draghandle {
+  position: absolute;
+  top: 0px;
+  right: 50%;
+  color: #aaa;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1.0;
+}
+
+
+ .modalTextArea {
+    width: 100%;
+    height: 100%; 
+    padding: 5px 5px !important;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    background-color: #f8f8f8;
+    font-size: 14px;
+    resize: none;
+}
+
+.modal-header {
+  max-height: 6em; /* Adjust the max-height to accommodate two lines */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds ellipsis if the text exceeds two lines */
+  white-space: nowrap;
+}
+
+.notes-exp {
+    align-items:center;
+    background:transparent;
+    border:none;
+    display:flex;
+    border-bottom:1px solid transparent;
+    font-family:"Merriweather",serif;
+    font-weight:bold;
+    padding-bottom:5px;
+    text-align:left;
+    width:auto;
+    cursor:pointer !important;
+    margin: 10px;
+
+}
+
+
+
+/* Define the animation */
+@keyframes rotate-arrow-up {
+    from {
+        transform: rotate(0deg); /* Starting rotation angle */
+    }
+    to {
+        transform: rotate(180deg); /* Ending rotation angle (you can adjust as needed) */
+    }
+}
+@keyframes rotate-arrow-down {
+    from {
+        transform: rotate(180deg); /* Starting rotation angle */
+    }
+    to {
+        transform: rotate(0deg); /* Ending rotation angle (you can adjust as needed) */
+    }
+}
+/* Apply the animation to your elements */
+.open-c::before,
+.closed-c::before {
+    content: "\25B2"; /* Unicode for a downward-pointing triangle */
+    margin-right: 0.5em; /* Space between the symbol and button text */
+    transition: transform 0.3s ease; /* Smooth transition when the transform changes */
+    cursor: pointer;
+}
+
+/* Apply the specific animation for the closed state */
+.closed-c::before {
+    animation: rotate-arrow-up 0.3s forwards; /* Apply the rotation animation */
+}
+
+/* Apply the specific animation for the closed state */
+.open-c::before {
+    animation: rotate-arrow-down 0.3s forwards; /* Apply the rotation animation */
 }
 
 

@@ -16,12 +16,14 @@
             "js": [
                 "jquery.js",
                 "jquery.dataTables.js",
+                "jquery-ui.js",
                 "content.js"
  
             ],
             "css": [
                 "custom.css",
-                "dataTables.css"
+                "dataTables.css",
+                "jquery-ui.css"
             ]
         }
     ],
