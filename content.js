@@ -184,6 +184,8 @@ var downloadButton = $('<button>').text('Export').addClass('btn').attr('id', 'do
 $('#myTable_wrapper').after(downloadButton);
 
 function downloadTxtFile() {
+    
+ 
   var tableData = [];
 
   // Get table headers
@@ -294,7 +296,7 @@ $(document).ready(function () {
         const dropBoxContent = $('<div>').addClass('drop-box-content u-ml30').hide();
 
         // Create a button for the dropdown trigger
-        const dropDownButton = $('<button class="notes-exp closed-c">Editorial Notes</button>');
+        const dropDownButton = $('<button class="h2 notes-exp closed-c">Editorial Notes</button>');
 
         // Create a div with class p-grid-container for the textarea and header
         const gridContainer = $('<div>').addClass('p-grid-container-c');
@@ -402,6 +404,11 @@ observer.observe(document.body, observerConfig);
 // Initial highlighting check when the content script runs
 highlightElements();
 
-
 });
+
+
+
+
+
+
                   
