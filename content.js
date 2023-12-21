@@ -2,7 +2,6 @@
 
 // Find all <link> elements with href containing 'basic.css'
 var links = document.querySelectorAll('link[href*="basic.css"]');
-
 // Loop through all found elements and remove them
 links.forEach(function(link) {
     link.parentNode.removeChild(link);
